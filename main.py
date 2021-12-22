@@ -2,7 +2,7 @@
 from twitter_queries import conservative_news, conservative_alt, conservative_politicians, moderate_politicians, moderate_news
 from twitter_queries import liberal_news,liberal_alt,liberal_politicians
 from pre_twitter_handler import Pre_twitter
-from data_swiper import Data_swiper
+from NLP_Twitter_News_Media_Project.data_swiper import Data_swiper
 from sql_storage import Ibm_sql
 from nlp_analysis import Nlp_analysis
 import pandas as pd
