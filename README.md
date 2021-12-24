@@ -7,12 +7,12 @@ It starts through data collection from twitter. Before the actual data collectio
 These variables were based on common political alignments and news outlet types. From there came the 
 designations of who would represent these features in the datasets. Upon acquiring the who, the 'how many' of each
 was loosely based on the overall popularity of the account as well as activity. From here, I commenced the data collection portion
-through snscrape. After collecting the data and formatting the data with pandas, I did a bit of data cleaning (mostly text  pre-processing), 
+through snscrape. After collecting the data through snscrape and formatting the data with pandas, I did a bit of data cleaning (mostly text  pre-processing), 
 which was then followed by feature engineering. The primary features pulled were sentiments, subjectivity, day of week,
 and length. These features were extracted using nlp applications as well as SQL. With the data being collected, cleaned, 
 formatted, and having all relevant features extracted, came the use of Jupyter Notebooks to engage in Exploratory Data 
 Analysis (mostly statistical analysis and visualizations) to get a better understanding of the dataset. I hope to be able
-to use what was learned from the EDA to be able to create a machine learning model and hopefully but it into production.
+to use what was learned from the EDA to be able to create a machine learning model and hopefully put it into production.
 
 
 ### How to Install plus additional info
