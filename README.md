@@ -27,4 +27,5 @@ It would only need to be cloned.
 - Then simply run the program and follow the instructions as given. The options are given in the order of a usual data project, 
 starting with data collection up to NLP processes, but one can simply choose the process as they need them.
 - When transferring over into a jupyter notebook, one can use a modified version of the code given in data_viz.py. The 
-modification would revolve around eliminating the OOP aspects and setting the methods as simply functions within the notebook
+modification would revolve around eliminating the OOP aspects and setting the methods as simply functions within the notebook.
+  (Examples of this can be seen in the notebooks published.)
