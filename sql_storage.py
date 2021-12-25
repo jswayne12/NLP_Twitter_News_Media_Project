@@ -1,6 +1,6 @@
 import ibm_db
 import ibm_db_sa
-from sqlalchemy import create_engine
+
 class Ibm_sql:
     #For privacy reasons, these portions will be left out
     def __init__(self):
@@ -34,6 +34,7 @@ class Ibm_sql:
             print("Unable to connect: ", ibm_db.conn_errormsg())
             return self.conn
     def make_query(self, string):
+        #Takes in a string that is written in SQL syntax in order to manipulate the IBM database connected to
         query = string
         conn = self.create_database_connection()
         try:
@@ -42,10 +43,6 @@ class Ibm_sql:
             print('Query successful')
         except:
             print('Query was not successful',  ibm_db.stmt_errormsg())
-    def insert_data_to_sql(self, df):
-        data = df
-        engine = create_engine('ibm_db_sa://'+self.dsn_uid+':'+self.dsn_pwd +'@'+self.dsn_hostname+':'+self.dsn_port+'/'+self.dsn_database)
-        data.to_sql(name="TWITTER_DATA", con=engine, if_exists='append', index=False)
     def close_connection(self):
         try:
             ibm_db.close(self.conn)

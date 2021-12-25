@@ -1,4 +1,8 @@
 import numpy as np
+
+#These nested lists hold all of the information need in order collect the data:the entities, the twitter accounts of
+#entities, and the weights for each entity. Theses will be formatted to be properly used in data collection through
+#the Pre_twitter class objects.
 conservative_news = [
     {'entity':'OANN','twitter':'OANN'},
     {'entity':'Fox', 'twitter':'FoxNews'},

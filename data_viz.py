@@ -5,10 +5,12 @@ from collections import Counter
 import nltk
 import plotly.graph_objects as go
 from NLP_Twitter_News_Media_Project.data_swiper import Data_swiper
+
 class Data_visualization:
     def __init__(self, df):
         self.df = df
         self.data_swiper = Data_swiper()
+
     def make_word_cloud(self, df, name):
         all_cleaned_data = []
         for list_ in df['CONTENT']:
@@ -42,17 +44,21 @@ class Data_visualization:
             all_cleaned_data.extend(cleaned_string)
         album_frequency = nltk.FreqDist(all_cleaned_data)
         album_frequency.plot(30)
+
     def make_bar_graph(self, x_axis, y_axis, color=None):
         sns.set(style="darkgrid")
         sns.barplot(x=x_axis,y=y_axis,data=self.df, color=color)
 
     def q1(self, x):
+        #returns the value of the 25th quantile in a data set
         return x.quantile(0.25)
 
     def q3(self, x):
+        # returns the value of the 25th quantile in a data set
         return x.quantile(0.75)
 
     def make_candle_plot(self, df, groupby_, attribute):
+        #Makes a candle plot that plots data based on based on the min, max, 25th percentile, and 75th percentile
         group_data = df.groupby([groupby_]).agg({f'{attribute}': ['mean', 'min', 'max', self.q1, self.q3]})
         group_data.rename(columns={'<lambda_0>': '25th', '<lambda_1>': '75th'}, inplace=True)
         group_data.reset_index(inplace=True)
@@ -65,6 +71,7 @@ class Data_visualization:
         fig.show()
 
     def make_candle_plot_multi(self, df, groupby_, attribute):
+        #Similar to the first but based on the intersection of two variables: political alignment and news outlet type
         group_data = df.groupby(groupby_).agg({f'{attribute}': ['mean', 'min', 'max', self.q1, self.q3]})
         group_data.rename(columns={'<lambda_0>': '25th', '<lambda_1>': '75th'}, inplace=True)
         group_data.reset_index(inplace=True)
@@ -76,7 +83,9 @@ class Data_visualization:
                                              high=group_data[attribute]['max'],
                                              low=group_data[attribute]['min'])])
         fig.show()
+
     def make_pie_chart_SA(self):
+        #Returns a pie chart that quickly summarizes the amount of positive, negative, and neutral tweets in a dataset
         self.df['SA_Level'] = 'Neutral'
         self.df['SA_Level'] = ['Positive' for rate in self.df['Overall Sentiment'] if self.df['Overall Sentiment'] > 0.35 ]
         self.df['SA_Level'] = ['Negative' for rate in self.df['Overall Sentiment'] if self.df['Overall Sentiment'] < -0.35]
@@ -88,7 +97,9 @@ class Data_visualization:
         labels = ['Positive', 'Negative', 'Neutral']
         colors = ['blue', 'red', 'yellow']
         plt.pie(slices, labels=labels, colors=colors)
+
     def make_common_NE_chart(self):
+        #Returns a frequency plot of the 30 most common Named entities in a datset.
         named_entities = []
         for entities in self.df['Name Entities']:
             named_entities.extend(entities)

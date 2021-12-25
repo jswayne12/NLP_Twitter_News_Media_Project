@@ -15,21 +15,22 @@ ibm_storage = Ibm_sql()
 conn = ibm_storage.create_database_connection()
 pconn = ibm_db_dbi.Connection(conn)
 
+#Here will be the prompting as to which operation will be enacted
 operation = input("""Which operation will we be using sir/ma'am? \n 'D' for Data-Pull, \n 'PRE SQL' for SQL PRE-NLP,
                     \n 'NLP' for NLP operations, \n 'POST SQL' for SQL POST NLP \n""")
 
 if operation == 'D':
-    #We have put all entities and their twitters into a nested list
+    #We have put all news entities and their twitters into a nested list
     all_lists = [conservative_news,moderate_news,liberal_news,conservative_politicians, moderate_politicians,
                  liberal_politicians, liberal_alt, conservative_alt]
 
-    #These lists are all twitters repeated/scaled by their respective array --- twitter_queries
+    #Using their respective nested_lists, we create a list with the entities simply repeated by their respective weighted value
     weighted_lists = []
     for element in all_lists:
         pre_tweet = Pre_twitter(element)
         weighted_lists.append(pre_tweet.make_weighted_twitter_list())
 
-    #Instead of the twitters repeated, we give the tweet and the number it should searched inside a nested list/dictionary
+    #We transform the last list of repeated entities into an nested list that hold each entity and how many tweets to be extracted from them
     tweet_counter = pre_tweet.tweet_counter(weighted_lists) #counts but in count object. Need to make a list
     tweet_pull_per_entity = []
     for dic in tweet_counter:
@@ -44,12 +45,12 @@ if operation == 'D':
     #Create the twitter swiper object
     twitter_swiper = Data_swiper()
 
-    #All tweets collected in nested lists
+    #We run a data pull to extract the tweets, and save those tweets into a nested list
     traditional_tweet_list = twitter_swiper.pull_from_twitter(traditional_news)
     alternative_tweet_list = twitter_swiper.pull_from_twitter(alt_news)
     politician_tweet_list = twitter_swiper.pull_from_twitter(politicians)
 
-    #The dataframes
+    #These functions transform the nested lists from before into pandas dataframes
     df_traditional = twitter_swiper.add_data_together(traditional_tweet_list, 'traditional')
     df_alternative = twitter_swiper.add_data_together(alternative_tweet_list, 'alternative')
     df_politician = twitter_swiper.add_data_together(politician_tweet_list, 'politician')
@@ -57,11 +58,12 @@ if operation == 'D':
     #Combine dataframes
     df = twitter_swiper.combine_dataframes(df_politician, df_alternative, df_traditional)
 
-    #Clean Data
+    #Cleans Data and returns a csv file
     clean_df1 = twitter_swiper.make_clean_dataframe(df)
     final_df = twitter_swiper.clean_time(clean_df1)
     final_df.to_csv('twitter_data.csv')
 
+    #This allows for the creation of a SQL table, and one would have to manually upload to their database
     sql_name = input('What would you like to name you SQL table?')
     ibm_storage.make_query(f'''CREATE TABLE {sql_name} (index INT NOT NULL, tweet_id BIGINT NOT NULL PRIMARY KEY,
                                     username VARCHAR(20), content VARCHAR(1000), political_alignment VARCHAR(15), 
@@ -72,11 +74,14 @@ elif operation == 'PRE SQL':
     pd.set_option('display.max_columns', 15)
     sql_table = input('Which SQL table would you like to modify?')
 
+    #We use SQL to extract the length of each tweet
     ibm_storage.make_query(f'''ALTER TABLE {sql_table}
                                 ADD length_of_tweet INT''')
     ibm_storage.make_query(f'''UPDATE {sql_table}
                                 SET length_of_tweet = CAST((LENGTH(content) - LENGTH(REPLACE(content, ' ',
                                 '')))+1 as INT) ''')
+
+    #We use SQL to extract the Day of week at which the tweets were published
     ibm_storage.make_query(f'''ALTER TABLE {sql_table}
                                 ADD day_name VARCHAR(10)''')
     ibm_storage.make_query(f'''UPDATE {sql_table}
